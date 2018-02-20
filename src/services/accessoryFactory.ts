@@ -7,6 +7,9 @@ import { OpenHAB2DeviceInterface } from '../models/platform/openHAB2DeviceInterf
 import { OpenHAB2Platform } from '../platform/openHAB2Platform';
 import { RollershutterAccessory } from '../accessories/rollershutterAccessory';
 import { ReverseRollershutterAccessory } from '../accessories/reverseRollershutterAccessory';
+import { TemperatureSensor } from '../accessories/temperatureSensor';
+import { HumiditySensor } from '../accessories/humiditySensor';
+
 
 export class AccessoryFactory {
 
@@ -15,7 +18,9 @@ export class AccessoryFactory {
     Lighting: LightbulbAccessory,
     Dimmable: DimmerAccessory,
     WindowCovering: RollershutterAccessory,
-    ReverseWindowCovering: ReverseRollershutterAccessory
+    ReverseWindowCovering: ReverseRollershutterAccessory,
+    CurrentTemperature: TemperatureSensor,
+    CurrentHumidity: HumiditySensor
   };
 
   static isValid(device: OpenHAB2DeviceInterface): boolean {
