@@ -3,11 +3,15 @@
 import { AbstractAccessory } from './abstracts/abstractAccessory';
 import { OpenHAB2DeviceInterface } from '../models/platform/openHAB2DeviceInterface';
 import { Deferred } from 'ts-deferred';
-import { OpenHAB2Platform } from '../platform/openHAB2Platform';
+//import { OpenHAB2Platform } from '../platform/openHAB2Platform';
 
 export class LightbulbAccessory extends AbstractAccessory {
 
   setItemBrightnessStateCalled = false;
+  brightness = 0;
+  hue = 0;
+  saturation = 0;
+
 
   setOtherServices() {
     this.otherService = this.getService(this.hapService.Lightbulb, this.displayName);
@@ -23,6 +27,10 @@ export class LightbulbAccessory extends AbstractAccessory {
         .on('set', this.setItemBrightnessState.bind(this))
         .on('get', this.getItemBrightnessState.bind(this))
         .setValue(+this.state, () => { }, 'init');
+    
+    }
+
+    if (this.device.type === 'Color') {
 
       this.getCharacteristic(this.hapCharacteristic.Hue, this.otherService)
         .on('set', this.setItemHueState.bind(this))
@@ -55,6 +63,9 @@ export class LightbulbAccessory extends AbstractAccessory {
           this.state = message
           characteristicOnDeferred.resolve(message)
         }, 'remote')
+    }
+
+    if (this.device.type === 'Color' || this.device.type === 'Dimmer') {
 
       this.getCharacteristic(this.hapCharacteristic.Brightness, this.otherService)
         .setValue(+message, () => {
