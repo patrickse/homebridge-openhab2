@@ -44,7 +44,26 @@ export class OpenHAB2Client {
     });
   }
 
+  getDevice(name): Promise<OpenHAB2DeviceInterface[]> {
+
+    return new Promise((resolve, reject) => {
+      const url = `http://${this.host}:${this.port}/rest/items/${name}`;
+      request.get({
+        url: url,
+        headers : { Accept: 'application/json'},
+        json: true
+      }, function(err, response, json) {
+        if (!err && response.statusCode == 200)
+          resolve(json);
+        else
+          reject(err);
+      });
+    });
+
+  }
+
   getDevices(): Promise<OpenHAB2DeviceInterface[]> {
+
     return new Promise((resolve, reject) => {
       const url = `http://${this.host}:${this.port}/rest/items?recursive=false`;
       request.get({
@@ -84,6 +103,23 @@ export class OpenHAB2Client {
         headers: {'Content-Type': 'text/plain'},
         url: url,
         body: action,
+        method: 'post'
+      }, function(err, response) {
+        if (!err && (response.statusCode == 200 || response.statusCode == 202))
+          resolve(response);
+        else
+          reject(response.body ? response.body : err);
+      });
+    });
+  }
+
+  executeUpdateState(ID: string, action: string, param?: any) {
+    return new Promise((resolve, reject) => {
+      const url = `http://${this.host}:${this.port}/rest/items/${ID}`;
+      request({
+        headers: {'Content-Type': 'text/plain'},
+        url: url,
+        body: String(action),
         method: 'post'
       }, function(err, response) {
         if (!err && (response.statusCode == 200 || response.statusCode == 202))

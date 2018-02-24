@@ -9,4 +9,5 @@ export interface OpenHAB2DeviceInterface {
   category: string;
   tags: string[];
   groupNames: string[];
+  members: OpenHAB2DeviceInterface[];
 }
